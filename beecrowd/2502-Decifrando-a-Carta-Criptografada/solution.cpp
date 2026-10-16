@@ -14,55 +14,55 @@ int main()
 { _
     
     int c, n;
+
     while (cin >> c >> n)
     {
+        cin.ignore();
         string a, b;
-        getline(cin >> ws, a);
-        getline(cin >> ws, b);
-
+        getline(cin, a);
+        getline(cin, b);
         map<char, char> cifra;
-        for (int i=0; i<c; i++)
-        {
 
-            if ((a[i]>=65 && a[i]<=90) && (b[i]>=65 && b[i]<=90))
+        // cria as cifras
+        for (int i=0; i<a.size(); i++)
+        {
+            cifra[a[i]]=b[i];
+            cifra[b[i]]=a[i];
+            if ((a[i] >= 'A' && a[i] <= 'Z') && (b[i] >= 'A' && b[i] <= 'Z'))
             {
-                cifra[a[i]] = b[i];
-                cifra[b[i]] = a[i];
-                cifra[a[i]+32] = b[i]+32;
-                cifra[b[i]+32] = a[i]+32;
+                cifra[(char)(a[i]+32)] = (char)(b[i]+32);
+                cifra[(char)(b[i]+32)] = (char)(a[i]+32);
             }
-            else if((a[i]>=97 && a[i]<=122) && (b[i]>=97 && b[i]<=122))
+            // b[i] é caracter especial
+            else if (a[i] >= 'A' && a[i] <= 'Z')
             {
-                cifra[a[i]] = b[i];
-                cifra[b[i]] = a[i];
-                cifra[a[i]-32] = b[i]-32;
-                cifra[b[i]-32] = a[i]-32;
+                cifra[(char)(a[i]+32)] = b[i];
             }
-            else if((a[i] >= 65 && a[i] <= 90) && (b[i]>= 48 && b[i] <=57))
+            // a[i] é caracter especial
+            else if (b[i] >= 'A' && b[i] <= 'Z')
             {
-                cifra[b[i]]=a[i]+32;
-                cifra[a[i]+32] = b[i];
-            }
-            else
-            {
-                cifra[a[i]] = b[i];
-                cifra[b[i]] = a[i];
+                cifra[(char)(b[i]+32)] = a[i];
             }
         }
 
-        for(int i=0; i<n; i++)
+        // cada linha
+        for (int i=0; i < n; i++)
         {
             string linha;
-            getline(cin >> ws, linha);
-            for(int j=0; j < (int)linha.size(); j++)
+            getline(cin, linha);
+            for (int j=0; j<linha.size(); j++)
             {
                 if (cifra.find(linha[j]) != cifra.end())
-                    cout << cifra[linha[j]];
+                {
+                    // caracter especial imprime a cifra minúscula
+                    if (((linha[j] < 'A' || linha[j] > 'Z') && (linha[j] < 'a' || linha[j] > 'z')))
+                        cout << (char)(cifra[linha[j]]+32);
+                    else cout << cifra[linha[j]];
+                }
                 else cout << linha[j];
             }
             cout << endl;
         }
-
         cout << endl;
     }
     return 0;
